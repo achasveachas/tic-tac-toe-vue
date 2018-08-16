@@ -1,6 +1,10 @@
 <template>
   <div id="app">
+    <div id="details">
+      <h1>Tic Tac Toe</h1>
+    </div>
 
+    <grid></grid>
   </div>
 </template>
 
@@ -9,7 +13,11 @@ export default {
   name: 'app',
   data () {
     return {
-
+      matches: 0,
+      wins: {
+        O: 0,
+        X: 0
+      }
     }
   }
 }

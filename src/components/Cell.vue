@@ -1,10 +1,16 @@
 <template>
-    
+    <td class="cell">{{  mark  }}</td>
 </template>
 
 <script>
     export default {
-        data () {}
+      props: ['name'],
+        data () {
+          return {
+            frozen: false,
+            mark: ''
+          }
+        }
     }
 </script>
 

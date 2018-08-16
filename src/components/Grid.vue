@@ -1,12 +1,46 @@
 <template>
-    
+    <table>
+        <tr>
+            <cell name="1"></cell>
+            <cell name="2"></cell>
+            <cell name="3"></cell>
+        </tr>
+        <tr>
+            <cell name="4"></cell>
+            <cell name="5"></cell>
+            <cell name="6"></cell>
+        </tr>
+        <tr>
+            <cell name="7"></cell>
+            <cell name="7"></cell>
+            <cell name="8"></cell>
+        </tr>
+    </table>
 </template>
 
 <script>
 
     export default {
         
-        data () {}
+        data () {
+            return {
+                activePlayer: 'O',
+                gameStatus: 'turn',
+                gameStatusMessage: "O's turn",
+                gameStatusColor: 'statusTurn',
+                moves: 0,
+                cells: {
+                    1:'', 2:'', 3:'',
+                    4:'', 5:'', 6:'',
+                    7:'', 8:'', 9:''
+                },
+                winConditions: [
+                    [1,2,3], [4,5,6], [7,8,9],
+                    [1,4,7], [2,5,8], [3,6,9],
+                    [1,5,9], [3,5,7]
+                ]
+            }
+        }
         
     }
 
