@@ -1,27 +1,33 @@
 <template>
-    <table>
-        <tr>
-            <cell name="1"></cell>
-            <cell name="2"></cell>
-            <cell name="3"></cell>
-        </tr>
-        <tr>
-            <cell name="4"></cell>
-            <cell name="5"></cell>
-            <cell name="6"></cell>
-        </tr>
-        <tr>
-            <cell name="7"></cell>
-            <cell name="7"></cell>
-            <cell name="8"></cell>
-        </tr>
-    </table>
+    <div>
+        <div class="gameStatus" :class="gameStatusColor">
+            {{ gameStatusMessage }}
+        </div>
+        <table>
+            <tr>
+                <cell name="1"></cell>
+                <cell name="2"></cell>
+                <cell name="3"></cell>
+            </tr>
+            <tr>
+                <cell name="4"></cell>
+                <cell name="5"></cell>
+                <cell name="6"></cell>
+            </tr>
+            <tr>
+                <cell name="7"></cell>
+                <cell name="8"></cell>
+                <cell name="9"></cell>
+            </tr>
+        </table>
+    </div>
 </template>
 
 <script>
-
+    import Cell from './Cell.vue'
     export default {
-        
+        components: { Cell },
+
         data () {
             return {
                 activePlayer: 'O',
@@ -30,9 +36,9 @@
                 gameStatusColor: 'statusTurn',
                 moves: 0,
                 cells: {
-                    1:'', 2:'', 3:'',
-                    4:'', 5:'', 6:'',
-                    7:'', 8:'', 9:''
+                    1:' ', 2:' ', 3:' ',
+                    4:' ', 5:' ', 6:' ',
+                    7:' ', 8:' ', 9:' '
                 },
                 winConditions: [
                     [1,2,3], [4,5,6], [7,8,9],
@@ -40,6 +46,74 @@
                     [1,5,9], [3,5,7]
                 ]
             }
+        },
+
+        computed: {
+            nonActivePlayer () {
+                return this.activePlayer === 'O' ? 'X' : 'O'
+            }
+        },
+
+        watch: {
+            gameStatus () {
+                if (this.gameStatus === 'win') {
+                    this.gameStatusColor = 'statusWin'
+                    return
+                } else if (this.gameStatus === 'draw') {
+                    this.gameStatusColor = 'statusDraw'
+                    this.gameStatusMessage = 'Draw!'
+                    return
+                }
+                this.gameStatusMessage = `${this.activePlayer}'s turn`
+            }
+        },
+
+        methods: {
+            changePlayer () {
+                this.activePlayer = this.activePlayer === 'O' ? 'X' : 'O'
+            },
+
+            changeGameStatus (){
+                if (this.checkForWin()) {
+                    return this.gameIsWon()
+                } else if (this.moves === 9){
+                    return 'draw'
+                }
+                return 'turn' + this.moves
+            },
+
+            checkForWin () {
+                for (let i = 0; i < this.winConditions.length; i++) {
+                    let wc = this.winConditions[i];
+                    let cells = this.cells
+
+                    if (this.areEqual(cells[wc[0]], cells[wc[1]], cells[wc[2]])) {
+                        return true
+                    }
+                }
+                return false
+            },
+
+            gameIsWon () {
+                Event.$emit('win', this.activePlayer)
+                this.gameStatusMessage = `${this.activePlayer} Wins !`
+                Event.$emit('freeze')
+
+                return 'win'
+            },
+
+            areEqual () {
+                return arguments[0] !== ' ' && arguments[0] === arguments[1] && arguments[1] === arguments[2]
+            }
+        },
+
+        created () {
+            Event.$on('strike', (cellNumber) => {
+                this.cells[cellNumber] = this.activePlayer
+                this.moves++
+                this.gameStatus = this.changeGameStatus()
+                this.changePlayer()
+            })
         }
         
     }
