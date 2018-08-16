@@ -23,6 +23,10 @@
       },
       created () {
         Event.$on('freeze', () => this.frozen = true)
+        Event.$on('clearCell', () => {
+          this.mark = ' '
+          this.frozen = false
+        })
       }
     }
 </script>
@@ -41,7 +45,7 @@
 }
 
 .cell::after {
-  content: '';
+  content: ' ';
   display: block;
 }
 

@@ -3,7 +3,7 @@
         <div class="gameStatus" :class="gameStatusColor">
             {{ gameStatusMessage }}
         </div>
-        <table>
+        <table class="grid">
             <tr>
                 <cell name="1"></cell>
                 <cell name="2"></cell>
@@ -113,6 +113,9 @@
                 this.moves++
                 this.gameStatus = this.changeGameStatus()
                 this.changePlayer()
+            })
+            Event.$on('gridReset', () => {
+                Object.assign(this.$data, this.$options.data())
             })
         }
         
